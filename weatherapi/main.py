@@ -2,6 +2,7 @@
 
 #Importar librerías
 import decimal
+from tokenize import String
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from fastapi import FastAPI
@@ -21,7 +22,7 @@ cursor_obj = cc.cursor(cursor_factory=RealDictCursor)
 app = FastAPI()
 
 @app.post("/Postlectura")
-async def insertar_lectura(temperatura: float, presion: float, altitud: float):
+async def insertar_lectura(temperatura: str, presion: str, altitud: str):
     sql = f"INSERT INTO lecturas (temperatura, presion, altitud) VALUES ({temperatura}, {presion}, {altitud})"
     cursor_obj.execute(sql)
     cc.commit()
@@ -30,7 +31,7 @@ async def insertar_lectura(temperatura: float, presion: float, altitud: float):
 
 @app.get("/GetLectura")
 async def leer_datos():
-    sql = f"SELECT * FROM lecturas   ORDER BY id DESC LIMIT 20"
+    sql = f"SELECT * FROM lecturas ORDER BY id DESC LIMIT 20"
     cursor_obj.execute(sql)
     rows = cursor_obj.fetchall()
     return rows
