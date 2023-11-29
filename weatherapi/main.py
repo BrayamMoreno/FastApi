@@ -6,6 +6,7 @@ from tokenize import String
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # variables de conexión a base de datos
 DB_HOST = "172.190.67.216" # Dirección del servidor
@@ -20,6 +21,14 @@ cursor_obj = cc.cursor(cursor_factory=RealDictCursor)
 
 #Creación de objeto API
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Puedes reemplazar "*" con la lista de dominios permitidos si es necesario
+    allow_credentials=True,
+    allow_methods=["*"],  # Puedes restringir los métodos permitidos si es necesario
+    allow_headers=["*"],  # Puedes restringir los encabezados permitidos si es necesario
+)
 
 @app.post("/Postlectura")
 async def insertar_lectura(temperatura: str, presion: str, altitud: str):
